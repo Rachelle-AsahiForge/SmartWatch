@@ -1,0 +1,406 @@
+﻿Build1=Default,asahi.alert
+File1=Form.bal
+File2=Layout.bal
+FileGroup1=Default Group
+FileGroup2=Default Group
+Group=Default Group
+Library1=abwifi
+Library10=togglewifidata
+Library11=xui
+Library12=sql
+Library2=b4xpreferencesdialog
+Library3=core
+Library4=dialogs
+Library5=jmqtt
+Library6=keyvaluestore2
+Library7=phone
+Library8=randomaccessfile
+Library9=runtimepermissions
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
+Module1=AutoBoot
+Module2=Form
+Module3=Starter
+NumberOfFiles=2
+NumberOfLibraries=12
+NumberOfModules=3
+Version=12
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: アラートウォッチ
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+	Private xui As XUI
+	
+	Private mqtt As MqttClient
+	Private serializator As B4XSerializator
+	Private mytopic As String = "SmartWatchMinoGifu"
+	Type CircleData (x As Double, y As Double, clr As Int)
+	'Private serverURI As String = "tcp://10.0.2.2:51044" 'emulator
+	'Private serverURI As String = "tcp://broker.hivemq.com:1883"
+	
+	Dim serverURI As String = "tcp://10.3.1.80:1883"
+	Dim phone As Phone
+	Dim Vibrate As PhoneVibrate
+	Dim android_id As String
+	
+	Dim android_name As String
+	Dim wifi As ABWifi
+	Dim kvs As KeyValueStore
+	Dim SQL As SQL
+	
+	
+	Dim DBFileName As String = "datastore.db"
+	Dim DBFilePath As String = File.DirInternal
+	
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	Private Status As Label
+	Private Label1 As Label
+	Private Button1 As Button
+	Private Button2 As Button
+	Private Button4 As Button
+	Private Button3 As Button
+	
+	
+	Private Button1_text As String
+	Private Button2_text As String
+	Private Button4_text As String
+	Private Button3_text As String
+	
+	Private EditName As EditText
+	Private EditServer As EditText
+	Private AndroidID As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("Layout")
+	If FirstTime Then
+
+			kvs.Initialize(File.DirInternal, "datastore.db")
+		Dim result As List = kvs.ListKeys
+		If  result.IndexOf("button1") <= -1 Then
+			kvs.Put("button1","保全")
+		Else If  result.IndexOf("button2") <= -1 Then
+			kvs.Put("button2","生産")
+				
+		Else If  result.IndexOf("button3")<= -1 Then
+			kvs.Put("button3","品質")
+				
+		Else If  result.IndexOf("button4") <= -1 Then
+			kvs.Put("button4","鍛造")
+				
+		Else If  result.IndexOf("SERVER")<= -1 Then
+				
+			kvs.Put("SERVER","tcp://10.3.1.80:1883")
+		Else If  result.IndexOf("NAME")<= -1 Then
+				
+			kvs.Put("NAME",phone.GetSettings ("android_id"))
+'			
+			
+		End If
+			Log("list "&kvs.ListKeys)
+			'If(kvs.ListKeys
+			Log("Database opened.")
+			
+			
+
+		
+		
+	End If
+	
+	Button1_text=	kvs.Get("button1")
+	Button2_text=	kvs.Get("button2")
+	Button3_text=	kvs.Get("button3")
+	Button4_text=	kvs.Get("button4")
+	android_name = kvs.Get("NAME")
+	serverURI = kvs.Get("SERVER")
+	If serverURI == Null Then
+		serverURI =  "tcp://10.3.1.80:1883"
+	End If
+	Log("serverURI"&serverURI)
+	serverURI =  "tcp://10.3.1.80:1883"
+	
+	Button1.Text = Button1_text
+	Button2.Text = Button2_text
+	Button3.Text = Button3_text
+	Button4.Text = Button4_text
+	Log("Button1_text"&Button1_text)
+	
+	
+	
+
+	android_id  = phone.GetSettings ("android_id")
+	Log(android_id)
+	wifi.Initialize("wifi")
+	ConnectToWifi
+	ConnectToMQTT
+	
+	
+	
+End Sub
+
+Sub Activity_Resume
+	
+	Activity.LoadLayout("Layout")
+	Status.Text = Starter.LastReceivedMessage
+	ConnectToWifi
+	ConnectToMQTT
+	Button1_text=	kvs.Get("button1")
+	Button2_text=	kvs.Get("button2")
+	Button3_text=	kvs.Get("button3")
+	Button4_text=	kvs.Get("button4")
+	
+	Button1.Text = Button1_text
+	Button2.Text = Button2_text
+	Button3.Text = Button3_text
+	Button4.Text = Button4_text
+	Log("Button1_text"&Button1_text)
+	
+	
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+	'Activity.LoadLayout("Layout")
+
+End Sub
+
+
+
+
+Sub ConnectToWifi
+	
+	Dim myWIFI_Test As ToggleWifiData
+	Dim WIFIstatus As Boolean
+	 
+	myWIFI_Test.Initialize
+	WIFIstatus=myWIFI_Test.isWIFI_enabled
+	
+	
+	If WIFIstatus == True Then
+		'Status.Text = "Connected"
+		Return True
+		
+	Else
+		myWIFI_Test.toggleWIFI
+		
+		Status.Text = "Wifi Error"
+		Return False
+		
+	End If
+	
+End Sub
+
+Sub ConnectToMQTT
+	
+	mqtt.Initialize("mqtt", serverURI, Rnd(0, 999999999) & DateTime.Now)
+	Dim mo As MqttConnectOptions
+	mo.Initialize("", "")
+	mqtt.Connect2(mo)
+	
+	'mytopic = "drawers/" & mqtt.ClientId
+	
+End Sub
+
+
+
+Sub mqtt_Connected (Success As Boolean)
+	If Success = False Then
+		Log(LastException)
+		
+		Status.Text = "MQTT Error"
+		'Status.Text = "Error connecting"
+	Else
+		'Status.Text = "Connected"
+		
+		android_id  = phone.GetSettings ("android_id")
+		mqtt.Subscribe("SmartWatchMinoGifu/Reply/"&android_id, 0)
+		
+		mqtt.Subscribe("SmartWatchMinoGifu/button1/"&android_id, 0)
+		mqtt.Subscribe("SmartWatchMinoGifu/button2/"&android_id, 0)
+		mqtt.Subscribe("SmartWatchMinoGifu/button3/"&android_id, 0)
+		mqtt.Subscribe("SmartWatchMinoGifu/button4/"&android_id, 0)
+	End If
+End Sub
+
+Private Sub mqtt_Disconnected
+	Status.Text = "MQTT Error"
+End Sub
+
+Private Sub mqtt_MessageArrived (Topic As String, Payload() As Byte)
+	Private Message As String = BytesToString(Payload, 0, Payload.Length, "utf8")
+	Log( "Message"&Message)
+	
+	Dim Topic_Type() As String
+	Topic_Type = Regex.Split("/", Topic)
+	Dim Topic_Purpose As String
+	Topic_Purpose = Topic_Type(1)
+	If	Topic_Purpose == "Reply" Then
+		
+		Status.Text  = Message
+	Vibrate.Vibrate(1000)
+	
+	Dim n As Notification
+	n.Initialize
+	n.Icon = "icon"
+	n.SetInfo(Message,"返事",Me)
+	n.Notify(1)
+	
+	else If	Topic_Purpose == "button1" Then
+		Button1.Text = Message
+		kvs.Put("button1", Message)
+		
+	else If	Topic_Purpose == "button2" Then
+		Button2.Text = Message
+		kvs.Put("button2", Message)
+		
+	else If	Topic_Purpose == "button3" Then
+		Button3.Text = Message
+		kvs.Put("button3", Message)
+		
+	else If	Topic_Purpose == "button4" Then
+		Button4.Text = Message
+		kvs.Put("button4", Message)
+	else If	Topic_Purpose == "name" Then
+		
+		kvs.Put("NAME",Message)
+		
+	End If
+	
+End Sub
+
+
+Private Sub SendAMessage(Alert As String, Level As String,Message As String)
+	ConnectToWifi
+	
+	If	mqtt.Connected == True Then
+		android_id  = phone.GetSettings ("android_id")
+		Dim Formatted_message  As String  = Level &","& Message
+		If Level == "HIGH" Then
+		
+			mqtt.Publish("SmartWatchMinoGifu/"&android_id,Formatted_message.GetBytes("UTF8"))
+			Else
+				
+			mqtt.Publish("SmartWatchMinoGifu/"&android_id,Formatted_message.GetBytes("UTF8"))
+		End If
+		Status.Text = Alert &"に送った"
+
+	Else
+		ConnectToWifi
+		ConnectToMQTT
+		
+	End If
+	
+End Sub
+
+Sub Button1_Click
+	
+	SendAMessage(Button1.Text,android_name &": LOW","Button1")
+End Sub
+Private Sub Button1_LongClick
+	SendAMessage(Button1.Text,android_name &":HIGH","Button1")
+	
+End Sub
+
+Private Sub Button2_Click
+	SendAMessage(Button2.Text,android_name &":LOW","Button2")
+End Sub
+Private Sub Button2_LongClick
+	
+	SendAMessage(Button2.Text,android_name &":HIGH","Button2")
+End Sub
+
+
+Private Sub Button3_Click
+	
+	SendAMessage(Button3.Text,android_name &":LOW","Button3")
+	
+End Sub
+Private Sub Button3_LongClick
+	
+	SendAMessage(Button3.Text,android_name &":HIGH","Button3")
+End Sub
+
+
+Private Sub Button4_Click
+	
+	SendAMessage(Button4.Text,android_name &":LOW","Button4")
+		
+End Sub
+Private Sub Button4_LongClick
+	SendAMessage(Button4.Text,android_name &":HIGH","Button4")
+	
+End Sub
+
+
+Sub RemoveAllViews
+	Dim i As Int
+    
+	For  i = Activity.NumberOfViews - 1 To 0 Step -1
+		Activity.RemoveViewAt(i)
+	Next
+End Sub
+Private Sub Label1_Click
+	RemoveAllViews
+	Activity.LoadLayout("Form")
+	AndroidID.Tag = "ID:"&android_id
+	
+
+	
+'	' start ABWifi
+'	ConnectToWifi
+'	Status.Text = "..."
+'	wifi.StartWifi
+'	' Get a reading
+'	ConnectToWifi
+'	wifi.GetNewReadingWifi
+'	
+'	'MsgboxAsync(phone.GetSettings ("android_id") ,"ID")
+'	Dim id As InputDialog
+'	Dim sf As Object = id.ShowAsync(phone.GetSettings ("android_id"), "MQTT サーバ", "Ok", "", "Cancel", Null, False)
+'	Wait For (sf) Dialog_Result(Result As Int)
+'	If Result = DialogResponse.POSITIVE Then
+'		Dim InputServer As String = "tcp://"&id.Input&":1883"
+'		kvs.Put("SERVER", InputServer)
+'		Log(id.Input)
+'		serverURI = InputServer
+'		ConnectToWifi
+'		ConnectToMQTT
+'	
+'		
+'	End If
+	
+End Sub
+
+
+Private Sub save_Click
+	
+	Dim InputServer As String = "tcp://"&EditServer.Text&":1883"
+	kvs.Put("SERVER", InputServer)
+	
+	
+	kvs.Put("NAME",EditName.Text)
+	
+	android_name = EditName.Text
+	RemoveAllViews
+	Activity.LoadLayout("Layout")
+End Sub
+
+Private Sub BackLabel_Click
+	RemoveAllViews
+	Activity.LoadLayout("Layout")
+End Sub
