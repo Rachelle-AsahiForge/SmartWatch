@@ -401,6 +401,7 @@ C:\Users\rachelle_galicia\Documents\PROJECTS\SmartWatch\RealtimeAlert\Objects\de
 C:\Users\rachelle_galicia\Documents\PROJECTS\SmartWatch\RealtimeAlert\Objects\dexed\asahi\alert\scrollinglabel.dex
 C:\Users\rachelle_galicia\Documents\PROJECTS\SmartWatch\RealtimeAlert\Objects\dexed\asahi\alert\starter$1.dex
 C:\Users\rachelle_galicia\Documents\PROJECTS\SmartWatch\RealtimeAlert\Objects\dexed\asahi\alert\starter$2.dex
+C:\Users\rachelle_galicia\Documents\PROJECTS\SmartWatch\RealtimeAlert\Objects\dexed\asahi\alert\starter$ResumableSub_ConnectAndReconnect.dex
 C:\Users\rachelle_galicia\Documents\PROJECTS\SmartWatch\RealtimeAlert\Objects\dexed\asahi\alert\starter$starter_BR.dex
 C:\Users\rachelle_galicia\Documents\PROJECTS\SmartWatch\RealtimeAlert\Objects\dexed\asahi\alert\starter.dex
 C:\Users\rachelle_galicia\Documents\PROJECTS\SmartWatch\RealtimeAlert\Objects\dexed\asahi\alert\swiftbutton.dex

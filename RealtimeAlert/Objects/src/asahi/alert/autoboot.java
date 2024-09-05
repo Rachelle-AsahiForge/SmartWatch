@@ -132,16 +132,19 @@ public static anywheresoftware.b4a.phone.Phone _phone = null;
 public static anywheresoftware.b4a.phone.Phone.PhoneVibrate _vibrate = null;
 public static int _counter = 0;
 public static String _lastreceivedmessage = "";
+public static b4a.example3.keyvaluestore _kvs = null;
+public static String _dbfilename = "";
+public static String _dbfilepath = "";
 public b4a.example.dateutils _dateutils = null;
 public asahi.alert.main _main = null;
 public asahi.alert.starter _starter = null;
 public asahi.alert.form _form = null;
 public asahi.alert.xuiviewsutils _xuiviewsutils = null;
 public static boolean  _application_error(anywheresoftware.b4a.objects.B4AException _error,String _stacktrace) throws Exception{
- //BA.debugLineNum = 44;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
- //BA.debugLineNum = 45;BA.debugLine="Return True";
+ //BA.debugLineNum = 60;BA.debugLine="Sub Application_Error (Error As Exception, StackTr";
+ //BA.debugLineNum = 61;BA.debugLine="Return True";
 if (true) return anywheresoftware.b4a.keywords.Common.True;
- //BA.debugLineNum = 46;BA.debugLine="End Sub";
+ //BA.debugLineNum = 62;BA.debugLine="End Sub";
 return false;
 }
 public static void  _connectandreconnect() throws Exception{
@@ -168,9 +171,9 @@ return;
 case 0:
 //C
 this.state = 1;
- //BA.debugLineNum = 55;BA.debugLine="ConnectToWifi";
+ //BA.debugLineNum = 71;BA.debugLine="ConnectToWifi";
 _connecttowifi();
- //BA.debugLineNum = 57;BA.debugLine="If mqtt.IsInitialized Then mqtt.Close";
+ //BA.debugLineNum = 73;BA.debugLine="If mqtt.IsInitialized Then mqtt.Close";
 if (true) break;
 
 case 1:
@@ -190,7 +193,7 @@ case 6:
 //C
 this.state = 7;
 ;
- //BA.debugLineNum = 58;BA.debugLine="Do While mqtt.IsInitialized";
+ //BA.debugLineNum = 74;BA.debugLine="Do While mqtt.IsInitialized";
 if (true) break;
 
 case 7:
@@ -205,7 +208,7 @@ if (true) break;
 case 9:
 //C
 this.state = 7;
- //BA.debugLineNum = 59;BA.debugLine="Sleep(100)";
+ //BA.debugLineNum = 75;BA.debugLine="Sleep(100)";
 anywheresoftware.b4a.keywords.Common.Sleep(processBA,this,(int) (100));
 this.state = 17;
 return;
@@ -219,9 +222,9 @@ case 10:
 //C
 this.state = 11;
 ;
- //BA.debugLineNum = 62;BA.debugLine="ConnectToMQTT";
+ //BA.debugLineNum = 78;BA.debugLine="ConnectToMQTT";
 _connecttomqtt();
- //BA.debugLineNum = 63;BA.debugLine="Wait For Mqtt_Connected (Success As Boolean)";
+ //BA.debugLineNum = 79;BA.debugLine="Wait For Mqtt_Connected (Success As Boolean)";
 anywheresoftware.b4a.keywords.Common.WaitFor("mqtt_connected", processBA, this, null);
 this.state = 18;
 return;
@@ -230,7 +233,7 @@ case 18:
 this.state = 11;
 _success = (Boolean) result[0];
 ;
- //BA.debugLineNum = 64;BA.debugLine="If Success Then";
+ //BA.debugLineNum = 80;BA.debugLine="If Success Then";
 if (true) break;
 
 case 11:
@@ -245,34 +248,34 @@ this.state = 15;
 case 13:
 //C
 this.state = 16;
- //BA.debugLineNum = 65;BA.debugLine="Log(\"Mqtt connected\")";
+ //BA.debugLineNum = 81;BA.debugLine="Log(\"Mqtt connected\")";
 anywheresoftware.b4a.keywords.Common.LogImpl("12359308","Mqtt connected",0);
- //BA.debugLineNum = 66;BA.debugLine="ConnectToWifi";
+ //BA.debugLineNum = 82;BA.debugLine="ConnectToWifi";
 _connecttowifi();
- //BA.debugLineNum = 67;BA.debugLine="Private android_id As String";
+ //BA.debugLineNum = 83;BA.debugLine="Private android_id As String";
 _android_id = "";
- //BA.debugLineNum = 68;BA.debugLine="android_id  = phone.GetSettings (\"android_id\")";
+ //BA.debugLineNum = 84;BA.debugLine="android_id  = phone.GetSettings (\"android_id\")";
 _android_id = parent._phone.GetSettings("android_id");
- //BA.debugLineNum = 69;BA.debugLine="mqtt.Subscribe(\"SmartWatchMinoGifu/Reply/\"&andro";
+ //BA.debugLineNum = 85;BA.debugLine="mqtt.Subscribe(\"SmartWatchMinoGifu/Reply/\"&andro";
 parent._mqtt.Subscribe("SmartWatchMinoGifu/Reply/"+_android_id,(int) (0));
- //BA.debugLineNum = 72;BA.debugLine="Dim str As String : str = counter";
+ //BA.debugLineNum = 88;BA.debugLine="Dim str As String : str = counter";
 _str = "";
- //BA.debugLineNum = 72;BA.debugLine="Dim str As String : str = counter";
+ //BA.debugLineNum = 88;BA.debugLine="Dim str As String : str = counter";
 _str = BA.NumberToString(parent._counter);
- //BA.debugLineNum = 73;BA.debugLine="mqtt.Publish(\"SmartWatchMinoGifu/\"& android_id &";
+ //BA.debugLineNum = 89;BA.debugLine="mqtt.Publish(\"SmartWatchMinoGifu/\"& android_id &";
 parent._mqtt.Publish("SmartWatchMinoGifu/"+_android_id+"/HB",_str.getBytes("UTF8"));
- //BA.debugLineNum = 75;BA.debugLine="counter= counter+1";
+ //BA.debugLineNum = 91;BA.debugLine="counter= counter+1";
 parent._counter = (int) (parent._counter+1);
- //BA.debugLineNum = 78;BA.debugLine="Log(\"Disconnected\")";
+ //BA.debugLineNum = 94;BA.debugLine="Log(\"Disconnected\")";
 anywheresoftware.b4a.keywords.Common.LogImpl("12359321","Disconnected",0);
  if (true) break;
 
 case 15:
 //C
 this.state = 16;
- //BA.debugLineNum = 80;BA.debugLine="Log(\"Error connecting.\")";
+ //BA.debugLineNum = 96;BA.debugLine="Log(\"Error connecting.\")";
 anywheresoftware.b4a.keywords.Common.LogImpl("12359323","Error connecting.",0);
- //BA.debugLineNum = 81;BA.debugLine="ConnectToWifi";
+ //BA.debugLineNum = 97;BA.debugLine="ConnectToWifi";
 _connecttowifi();
  if (true) break;
 
@@ -280,7 +283,7 @@ case 16:
 //C
 this.state = -1;
 ;
- //BA.debugLineNum = 84;BA.debugLine="End Sub";
+ //BA.debugLineNum = 100;BA.debugLine="End Sub";
 if (true) break;
 
             }
@@ -291,57 +294,57 @@ public static void  _mqtt_connected(boolean _success) throws Exception{
 }
 public static String  _connecttomqtt() throws Exception{
 anywheresoftware.b4j.objects.MqttAsyncClientWrapper.MqttConnectOptionsWrapper _mo = null;
- //BA.debugLineNum = 108;BA.debugLine="Sub ConnectToMQTT";
- //BA.debugLineNum = 110;BA.debugLine="mqtt.Initialize(\"mqtt\", serverURI, Rnd(0, 9999999";
+ //BA.debugLineNum = 124;BA.debugLine="Sub ConnectToMQTT";
+ //BA.debugLineNum = 126;BA.debugLine="mqtt.Initialize(\"mqtt\", serverURI, Rnd(0, 9999999";
 _mqtt.Initialize(processBA,"mqtt",_serveruri,BA.NumberToString(anywheresoftware.b4a.keywords.Common.Rnd((int) (0),(int) (999999999)))+BA.NumberToString(anywheresoftware.b4a.keywords.Common.DateTime.getNow()));
- //BA.debugLineNum = 111;BA.debugLine="Dim mo As MqttConnectOptions";
+ //BA.debugLineNum = 127;BA.debugLine="Dim mo As MqttConnectOptions";
 _mo = new anywheresoftware.b4j.objects.MqttAsyncClientWrapper.MqttConnectOptionsWrapper();
- //BA.debugLineNum = 112;BA.debugLine="mo.Initialize(\"\", \"\")";
+ //BA.debugLineNum = 128;BA.debugLine="mo.Initialize(\"\", \"\")";
 _mo.Initialize("","");
- //BA.debugLineNum = 113;BA.debugLine="mqtt.Connect2(mo)";
+ //BA.debugLineNum = 129;BA.debugLine="mqtt.Connect2(mo)";
 _mqtt.Connect2((org.eclipse.paho.client.mqttv3.MqttConnectOptions)(_mo.getObject()));
- //BA.debugLineNum = 120;BA.debugLine="End Sub";
+ //BA.debugLineNum = 136;BA.debugLine="End Sub";
 return "";
 }
 public static String  _connecttowifi() throws Exception{
 tillekesoft.b4a.ToggleWifiData.ToggleWifiData _mywifi_test = null;
 boolean _wifistatus = false;
- //BA.debugLineNum = 86;BA.debugLine="Sub ConnectToWifi";
- //BA.debugLineNum = 88;BA.debugLine="Dim myWIFI_Test As ToggleWifiData";
+ //BA.debugLineNum = 102;BA.debugLine="Sub ConnectToWifi";
+ //BA.debugLineNum = 104;BA.debugLine="Dim myWIFI_Test As ToggleWifiData";
 _mywifi_test = new tillekesoft.b4a.ToggleWifiData.ToggleWifiData();
- //BA.debugLineNum = 89;BA.debugLine="Dim WIFIstatus As Boolean";
+ //BA.debugLineNum = 105;BA.debugLine="Dim WIFIstatus As Boolean";
 _wifistatus = false;
- //BA.debugLineNum = 91;BA.debugLine="myWIFI_Test.Initialize";
+ //BA.debugLineNum = 107;BA.debugLine="myWIFI_Test.Initialize";
 _mywifi_test.Initialize(processBA);
- //BA.debugLineNum = 92;BA.debugLine="WIFIstatus=myWIFI_Test.isWIFI_enabled";
+ //BA.debugLineNum = 108;BA.debugLine="WIFIstatus=myWIFI_Test.isWIFI_enabled";
 _wifistatus = _mywifi_test.isWIFI_enabled();
- //BA.debugLineNum = 94;BA.debugLine="If WIFIstatus == True Then";
+ //BA.debugLineNum = 110;BA.debugLine="If WIFIstatus == True Then";
 if (_wifistatus==anywheresoftware.b4a.keywords.Common.True) { 
- //BA.debugLineNum = 96;BA.debugLine="Return True";
+ //BA.debugLineNum = 112;BA.debugLine="Return True";
 if (true) return BA.ObjectToString(anywheresoftware.b4a.keywords.Common.True);
  }else {
- //BA.debugLineNum = 99;BA.debugLine="myWIFI_Test.toggleWIFI";
+ //BA.debugLineNum = 115;BA.debugLine="myWIFI_Test.toggleWIFI";
 _mywifi_test.toggleWIFI();
- //BA.debugLineNum = 102;BA.debugLine="Return False";
+ //BA.debugLineNum = 118;BA.debugLine="Return False";
 if (true) return BA.ObjectToString(anywheresoftware.b4a.keywords.Common.False);
  };
- //BA.debugLineNum = 106;BA.debugLine="End Sub";
+ //BA.debugLineNum = 122;BA.debugLine="End Sub";
 return "";
 }
 public static String  _mqtt_messagearrived(String _topic,byte[] _payload) throws Exception{
 String _message = "";
- //BA.debugLineNum = 123;BA.debugLine="Private Sub mqtt_MessageArrived (Topic As String,";
- //BA.debugLineNum = 128;BA.debugLine="Log( BytesToString(Payload, 0, Payload.Length, \"u";
+ //BA.debugLineNum = 139;BA.debugLine="Private Sub mqtt_MessageArrived (Topic As String,";
+ //BA.debugLineNum = 144;BA.debugLine="Log( BytesToString(Payload, 0, Payload.Length, \"u";
 anywheresoftware.b4a.keywords.Common.LogImpl("12555909",anywheresoftware.b4a.keywords.Common.BytesToString(_payload,(int) (0),_payload.length,"utf8"),0);
- //BA.debugLineNum = 129;BA.debugLine="Private Message As String = BytesToString(Payload";
+ //BA.debugLineNum = 145;BA.debugLine="Private Message As String = BytesToString(Payload";
 _message = anywheresoftware.b4a.keywords.Common.BytesToString(_payload,(int) (0),_payload.length,"utf8");
- //BA.debugLineNum = 132;BA.debugLine="Vibrate.Vibrate(500)";
+ //BA.debugLineNum = 148;BA.debugLine="Vibrate.Vibrate(500)";
 _vibrate.Vibrate(processBA,(long) (500));
- //BA.debugLineNum = 135;BA.debugLine="StartActivity(Main)";
+ //BA.debugLineNum = 151;BA.debugLine="StartActivity(Main)";
 anywheresoftware.b4a.keywords.Common.StartActivity(processBA,(Object)(mostCurrent._main.getObject()));
- //BA.debugLineNum = 136;BA.debugLine="LastReceivedMessage = Message";
+ //BA.debugLineNum = 152;BA.debugLine="LastReceivedMessage = Message";
 _lastreceivedmessage = _message;
- //BA.debugLineNum = 143;BA.debugLine="End Sub";
+ //BA.debugLineNum = 159;BA.debugLine="End Sub";
 return "";
 }
 public static String  _process_globals() throws Exception{
@@ -360,35 +363,55 @@ _vibrate = new anywheresoftware.b4a.phone.Phone.PhoneVibrate();
 _counter = (int) (0);
  //BA.debugLineNum = 23;BA.debugLine="Dim  LastReceivedMessage As String";
 _lastreceivedmessage = "";
- //BA.debugLineNum = 24;BA.debugLine="End Sub";
-return "";
-}
-public static String  _service_create() throws Exception{
- //BA.debugLineNum = 26;BA.debugLine="Sub Service_Create";
- //BA.debugLineNum = 29;BA.debugLine="ConnectAndReconnect";
-_connectandreconnect();
+ //BA.debugLineNum = 25;BA.debugLine="Dim kvs As KeyValueStore";
+_kvs = new b4a.example3.keyvaluestore();
+ //BA.debugLineNum = 28;BA.debugLine="Dim DBFileName As String = \"datastore.db\"";
+_dbfilename = "datastore.db";
+ //BA.debugLineNum = 29;BA.debugLine="Dim DBFilePath As String = File.DirInternal";
+_dbfilepath = anywheresoftware.b4a.keywords.Common.File.getDirInternal();
  //BA.debugLineNum = 30;BA.debugLine="End Sub";
 return "";
 }
+public static String  _service_create() throws Exception{
+ //BA.debugLineNum = 32;BA.debugLine="Sub Service_Create";
+ //BA.debugLineNum = 35;BA.debugLine="ConnectAndReconnect";
+_connectandreconnect();
+ //BA.debugLineNum = 36;BA.debugLine="End Sub";
+return "";
+}
 public static String  _service_destroy() throws Exception{
- //BA.debugLineNum = 48;BA.debugLine="Sub Service_Destroy";
- //BA.debugLineNum = 50;BA.debugLine="End Sub";
+ //BA.debugLineNum = 64;BA.debugLine="Sub Service_Destroy";
+ //BA.debugLineNum = 66;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_start(anywheresoftware.b4a.objects.IntentWrapper _startingintent) throws Exception{
- //BA.debugLineNum = 32;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
- //BA.debugLineNum = 33;BA.debugLine="StartServiceAt(Null, DateTime.Now +30 * 1000, Tru";
-anywheresoftware.b4a.keywords.Common.StartServiceAt(processBA,anywheresoftware.b4a.keywords.Common.Null,(long) (anywheresoftware.b4a.keywords.Common.DateTime.getNow()+30*1000),anywheresoftware.b4a.keywords.Common.True);
- //BA.debugLineNum = 34;BA.debugLine="Service.StopAutomaticForeground 'Starter service";
+anywheresoftware.b4a.objects.collections.List _result = null;
+ //BA.debugLineNum = 38;BA.debugLine="Sub Service_Start (StartingIntent As Intent)";
+ //BA.debugLineNum = 40;BA.debugLine="kvs.Initialize(File.DirInternal, \"datastore.db\")";
+_kvs._initialize(processBA,anywheresoftware.b4a.keywords.Common.File.getDirInternal(),"datastore.db");
+ //BA.debugLineNum = 41;BA.debugLine="Dim result As List = kvs.ListKeys";
+_result = new anywheresoftware.b4a.objects.collections.List();
+_result = _kvs._listkeys();
+ //BA.debugLineNum = 43;BA.debugLine="If  result.IndexOf(\"SERVER\")<= -1 Then";
+if (_result.IndexOf((Object)("SERVER"))<=-1) { 
+ //BA.debugLineNum = 44;BA.debugLine="serverURI = \"tcp://10.3.1.80:1883\"";
+_serveruri = "tcp://10.3.1.80:1883";
+ }else {
+ //BA.debugLineNum = 46;BA.debugLine="serverURI = \"tcp://\" & kvs.Get(\"SERVER\")&\":1883\"";
+_serveruri = "tcp://"+BA.ObjectToString(_kvs._get("SERVER"))+":1883";
+ };
+ //BA.debugLineNum = 49;BA.debugLine="StartServiceAt(Null, DateTime.Now +5 * 1000, True";
+anywheresoftware.b4a.keywords.Common.StartServiceAt(processBA,anywheresoftware.b4a.keywords.Common.Null,(long) (anywheresoftware.b4a.keywords.Common.DateTime.getNow()+5*1000),anywheresoftware.b4a.keywords.Common.True);
+ //BA.debugLineNum = 50;BA.debugLine="Service.StopAutomaticForeground 'Starter service";
 mostCurrent._service.StopAutomaticForeground();
- //BA.debugLineNum = 35;BA.debugLine="ConnectAndReconnect";
+ //BA.debugLineNum = 51;BA.debugLine="ConnectAndReconnect";
 _connectandreconnect();
- //BA.debugLineNum = 37;BA.debugLine="End Sub";
+ //BA.debugLineNum = 53;BA.debugLine="End Sub";
 return "";
 }
 public static String  _service_taskremoved() throws Exception{
- //BA.debugLineNum = 39;BA.debugLine="Sub Service_TaskRemoved";
- //BA.debugLineNum = 41;BA.debugLine="End Sub";
+ //BA.debugLineNum = 55;BA.debugLine="Sub Service_TaskRemoved";
+ //BA.debugLineNum = 57;BA.debugLine="End Sub";
 return "";
 }
 }

@@ -10,6 +10,6 @@ ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
 ModuleClosedNodes3=
-NavigationStack=Main,Button2_Click,292,0,Main,Button2_LongClick,296,0,Main,Button3_Click,302,0,Main,Button3_LongClick,307,0,Main,Button4_Click,313,0,Main,Button4_LongClick,317,0,Main,mqtt_Connected,203,0,Visual Designer,Form.bal,-100,2,Visual Designer,layout.bal,-100,2,Main,Process_Globals,31,0
+NavigationStack=AutoBoot,Service_TaskRemoved,57,0,Starter,Service_Destroy,50,0,AutoBoot,ConnectToWifi,114,0,Starter,Service_Create,28,0,AutoBoot,Service_Start,39,6,Starter,Process_Globals,30,0,AutoBoot,Process_Globals,23,0,AutoBoot,ConnectAndReconnect,88,0,Starter,ConnectAndReconnect,80,0,Starter,Service_Start,49,0
 SelectedBuild=0
 VisibleModules=3,1

@@ -22,13 +22,13 @@
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
 	<application
 		android:icon="@drawable/icon"
-		android:label="アラートウォッチ"
+		android:label="工場アラート"
 		android:theme="@style/LightTheme">
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
 			android:name=".main"
-			android:label="アラートウォッチ"
+			android:label="工場アラート"
 			android:screenOrientation="unspecified"
 			android:exported="true">
 			<intent-filter>
@@ -60,7 +60,7 @@
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
 			android:name=".form"
-			android:label="アラートウォッチ"
+			android:label="工場アラート"
 			android:screenOrientation="unspecified"
 			android:exported="true">
 		</activity>

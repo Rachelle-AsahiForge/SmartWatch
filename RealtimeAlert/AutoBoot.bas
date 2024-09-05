@@ -27,6 +27,12 @@ Sub Process_Globals
 	Dim Vibrate As PhoneVibrate
 	Private counter As Int = 0
 	Dim  LastReceivedMessage As String
+	
+	Dim kvs As KeyValueStore
+	
+	
+	Dim DBFileName As String = "datastore.db"
+	Dim DBFilePath As String = File.DirInternal
 End Sub
 
 Sub Service_Create
@@ -36,7 +42,17 @@ Sub Service_Create
 End Sub
 
 Sub Service_Start (StartingIntent As Intent)
-	StartServiceAt(Null, DateTime.Now +30 * 1000, True) ' 900 seconds/60 = 15 minutes from the current second
+	
+	kvs.Initialize(File.DirInternal, "datastore.db")
+	Dim result As List = kvs.ListKeys
+	
+	If  result.IndexOf("SERVER")<= -1 Then
+		serverURI = "tcp://10.3.1.80:1883"
+	Else
+		serverURI = "tcp://" & kvs.Get("SERVER")&":1883"
+		End If
+		
+	StartServiceAt(Null, DateTime.Now +5 * 1000, True) ' 900 seconds/60 = 15 minutes from the current second
 	Service.StopAutomaticForeground 'Starter service can start in the foreground state in some edge cases.
 	ConnectAndReconnect
 	

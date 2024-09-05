@@ -849,11 +849,11 @@ _android_id = _phone.GetSettings("android_id");
 _formatted_message = _level+","+_message;
  //BA.debugLineNum = 266;BA.debugLine="If Level == \"HIGH\" Then";
 if ((_level).equals("HIGH")) { 
- //BA.debugLineNum = 268;BA.debugLine="mqtt.Publish(\"SmartWatchMinoGifu/\"&android_id,F";
-_mqtt.Publish("SmartWatchMinoGifu/"+_android_id,_formatted_message.getBytes("UTF8"));
+ //BA.debugLineNum = 268;BA.debugLine="mqtt.Publish(\"SmartWatchMinoGifu/\"&Alert&\"/\" &a";
+_mqtt.Publish("SmartWatchMinoGifu/"+_alert+"/"+_android_id,_formatted_message.getBytes("UTF8"));
  }else {
- //BA.debugLineNum = 271;BA.debugLine="mqtt.Publish(\"SmartWatchMinoGifu/\"&android_id,F";
-_mqtt.Publish("SmartWatchMinoGifu/"+_android_id,_formatted_message.getBytes("UTF8"));
+ //BA.debugLineNum = 271;BA.debugLine="mqtt.Publish(\"SmartWatchMinoGifu/\"&Alert&\"/\" &a";
+_mqtt.Publish("SmartWatchMinoGifu/"+_alert+"/"+_android_id,_formatted_message.getBytes("UTF8"));
  };
  //BA.debugLineNum = 273;BA.debugLine="Status.Text = Alert &\"に送った\"";
 mostCurrent._status.setText(BA.ObjectToCharSequence(_alert+"に送った"));

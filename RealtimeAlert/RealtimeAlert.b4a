@@ -26,7 +26,7 @@ NumberOfModules=3
 Version=12
 @EndOfDesignText@
 #Region  Project Attributes 
-	#ApplicationLabel: アラートウォッチ
+	#ApplicationLabel: 工場アラート
 	#VersionCode: 1
 	#VersionName: 
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
@@ -292,10 +292,10 @@ Private Sub SendAMessage(Alert As String, Level As String,Message As String)
 		Dim Formatted_message  As String  = Level &","& Message
 		If Level == "HIGH" Then
 		
-			mqtt.Publish("SmartWatchMinoGifu/"&android_id,Formatted_message.GetBytes("UTF8"))
+			mqtt.Publish("SmartWatchMinoGifu/"&Alert&"/" &android_id,Formatted_message.GetBytes("UTF8"))
 			Else
 				
-			mqtt.Publish("SmartWatchMinoGifu/"&android_id,Formatted_message.GetBytes("UTF8"))
+			mqtt.Publish("SmartWatchMinoGifu/"&Alert&"/" &android_id,Formatted_message.GetBytes("UTF8"))
 		End If
 		Status.Text = Alert &"に送った"
 
